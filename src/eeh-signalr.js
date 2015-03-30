@@ -1,4 +1,4 @@
-(function() {
+(function(angular) {
     'use strict';
     var SignalRService = function ($window, url) {
         this.jQuery = $window.jQuery;
@@ -8,12 +8,10 @@
     SignalRService.prototype.getHub = function (hubName) {
         var hub = this.jQuery.connection[hubName];
         this.jQuery.connection.hub.url = this._url;
-        console.log('hub created');
         return hub;
     };
 
     SignalRService.prototype.start = function () {
-        console.log('start');
         this.jQuery.connection.hub.start();
         return this;
     };
@@ -35,4 +33,4 @@
     };
 
     angular.module('eehSignalR', []).provider('eehSignalR', SignalRProvider);
-}());
+}(angular));
