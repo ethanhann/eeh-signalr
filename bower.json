@@ -1,0 +1,26 @@
+{
+  "name": "eeh-signalr",
+  "version": "0.0.0",
+  "authors": [
+    "Ethan Hann <ethanhann@gmail.com>"
+  ],
+  "description": "AngularJS wrapper module for the official jQuery SignalR client.",
+  "main": "src/eeh-signalr.js",
+  "keywords": [
+    "AngularJS",
+    "SignalR",
+    "Hub"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/ethanhann/eeh-signalr",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "signalr": "~2.2.0"
+  }
+}
