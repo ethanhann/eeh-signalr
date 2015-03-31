@@ -1,23 +1,16 @@
-(function(angular) {
+(function (angular) {
     'use strict';
-    var SignalRService = function ($window, url) {
-        this.jQuery = $window.jQuery;
-        this._url = url;
+    var SignalRService = function (jQuery) {
+        this.jQuery = jQuery;
     };
 
     SignalRService.prototype.getHub = function (hubName) {
-        var hub = this.jQuery.connection[hubName];
-        this.jQuery.connection.hub.url = this._url;
-        return hub;
-    };
-
-    SignalRService.prototype.start = function () {
-        this.jQuery.connection.hub.start();
-        return this;
+        return this.jQuery.connection[hubName];
     };
 
     var SignalRProvider = function () {
         this._url = '/signalr';
+        this._proxies = {};
     };
 
     SignalRProvider.prototype.url = function (value) {
@@ -28,8 +21,35 @@
         return this;
     };
 
-    SignalRProvider.prototype.$get = function ($window) {
-        return new SignalRService($window, this.url());
+    SignalRProvider.prototype.proxies = function (value) {
+        if (angular.isUndefined(value)) {
+            return this._proxies;
+        }
+        this._proxies = value;
+        return this;
+    };
+
+    SignalRProvider.prototype.$get = function ($rootScope, $window) {
+        var jQuery = $window.jQuery;
+        var self = this;
+        angular.forEach(jQuery.connection.hub.proxies, function (proxy, proxyName) {
+            if (!self._proxies.hasOwnProperty(proxyName)) {
+                return;
+            }
+            angular.forEach(self._proxies[proxyName], function (methodName) {
+                proxy.client[methodName] = function () {
+                    var args = [];
+                    angular.forEach(arguments, function (argument) {
+                        args.push(argument);
+                    });
+                    $rootScope.$broadcast('eehSignalR:' + methodName, args);
+                    $rootScope.$apply();
+                };
+            });
+        });
+        jQuery.connection.hub.url = this.url();
+        jQuery.connection.hub.start();
+        return new SignalRService(jQuery);
     };
 
     angular.module('eehSignalR', []).provider('eehSignalR', SignalRProvider);
