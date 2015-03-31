@@ -22,6 +22,7 @@ angular.module('myApp')
     var hub = eehSignalR.getHub('assetHub');
     hub.client.hello = function (message) {
         $scope.message = message;
+        $scope.$apply();
     };
     eehSignalR.start();
 });
