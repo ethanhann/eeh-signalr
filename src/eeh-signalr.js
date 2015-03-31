@@ -21,11 +21,11 @@
         return this;
     };
 
-    SignalRProvider.prototype.proxies = function (value) {
-        if (angular.isUndefined(value)) {
-            return this._proxies;
+    SignalRProvider.prototype.proxy = function (name, methods) {
+        if (angular.isUndefined(methods)) {
+            return this._proxies[name];
         }
-        this._proxies = value;
+        this._proxies[name] = methods;
         return this;
     };
 
