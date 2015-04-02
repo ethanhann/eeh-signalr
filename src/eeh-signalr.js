@@ -29,7 +29,7 @@
         return this;
     };
 
-    SignalRProvider.prototype.$get = function ($rootScope, $window) {
+    SignalRProvider.prototype.$get = ['$rootScope', '$window', function ($rootScope, $window) {
         var jQuery = $window.jQuery;
         var self = this;
         angular.forEach(jQuery.connection.hub.proxies, function (proxy, proxyName) {
@@ -50,7 +50,7 @@
         jQuery.connection.hub.url = this.url();
         jQuery.connection.hub.start();
         return new SignalRService(jQuery);
-    };
+    }];
 
     angular.module('eehSignalR', []).provider('eehSignalR', SignalRProvider);
 }(angular));
