@@ -1,11 +1,21 @@
 (function (angular) {
     'use strict';
-    var SignalRService = function (jQuery) {
-        this.jQuery = jQuery;
+    var SignalRService = function (connection) {
+        this.connection = connection;
     };
 
     SignalRService.prototype.getHub = function (hubName) {
-        return this.jQuery.connection[hubName];
+        return this.connection[hubName];
+    };
+
+    SignalRService.prototype.queryString = function (value) {
+        this.connection.hub.qs = value;
+        return this;
+    };
+
+    SignalRService.prototype.start = function () {
+        this.connection.hub.start();
+        return this;
     };
 
     var SignalRProvider = function () {
@@ -48,8 +58,7 @@
             });
         });
         jQuery.connection.hub.url = this.url();
-        jQuery.connection.hub.start();
-        return new SignalRService(jQuery);
+        return new SignalRService(jQuery.connection);
     }];
 
     angular.module('eehSignalR', []).provider('eehSignalR', SignalRProvider);
